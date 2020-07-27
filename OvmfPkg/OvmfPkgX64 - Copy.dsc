@@ -24,12 +24,6 @@
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = OvmfPkg/OvmfPkgX64.fdf
 
-# For UEFI / EDK II Training 
-# This flag is to enable a different ver string for building of the ShellPkg
-# These can be changed on the command line.
-#  
-  DEFINE  ADD_SHELL_STRING         = FALSE
-  
   #
   # Defines for default states.  These can be changed on the command line.
   # -D FLAG=VALUE
@@ -471,11 +465,6 @@
 !endif
 
 [PcdsFixedAtBuild]
-# UEFI / EDK II Training
-#gEfiMdeModulePkgTokenSpaceGuid.PcdHelloWorldPrintTimes|3
-#   Here is where you would put the HelloWorldPrintString PCD
-# HINT: look at MdeModulePkg.dec for HelloWorldPrintString
-
   gEfiMdeModulePkgTokenSpaceGuid.PcdStatusCodeMemorySize|1
 !if $(SMM_REQUIRE) == FALSE
   gEfiMdeModulePkgTokenSpaceGuid.PcdResetOnMemoryTypeInformationChange|FALSE
@@ -914,13 +903,7 @@
       ShellCommandLib|ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf
       NULL|ShellPkg/Library/UefiShellLevel2CommandsLib/UefiShellLevel2CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellLevel1CommandsLib/UefiShellLevel1CommandsLib.inf
-!if $(ADD_SHELL_STRING) == TRUE 
-	# Training Lib for build switch lab
-      NULL|ShellPkg/Library/UefiShellLevel3CommandsLib_Training_Lib/UefiShellLevel3Commands_Training_Lib.inf
-!else
-	# normal Lib for build switch
       NULL|ShellPkg/Library/UefiShellLevel3CommandsLib/UefiShellLevel3CommandsLib.inf
-!endif
       NULL|ShellPkg/Library/UefiShellDriver1CommandsLib/UefiShellDriver1CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellDebug1CommandsLib/UefiShellDebug1CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellInstall1CommandsLib/UefiShellInstall1CommandsLib.inf
@@ -1028,11 +1011,3 @@
       Tpm12DeviceLib|SecurityPkg/Library/Tpm12DeviceLibDTpm/Tpm12DeviceLibDTpm.inf
   }
 !endif
-
-
-
-# UEFI / EDK II Training Class
-
-# Add new modules here
-
-# MdeModulePkg/Application/HelloWorld/Hellosworld.inf
