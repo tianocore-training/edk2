@@ -157,6 +157,7 @@ F: BaseTools/
 W: https://github.com/tianocore/tianocore.github.io/wiki/BaseTools
 M: Bob Feng <bob.c.feng@intel.com>
 M: Liming Gao <liming.gao@intel.com>
+R: Yuwei Chen <yuwei.chen@intel.com>
 
 CryptoPkg
 F: CryptoPkg/
@@ -164,6 +165,7 @@ W: https://github.com/tianocore/tianocore.github.io/wiki/CryptoPkg
 M: Jiewen Yao <jiewen.yao@intel.com>
 M: Jian J Wang <jian.j.wang@intel.com>
 R: Xiaoyu Lu <xiaoyux.lu@intel.com>
+R: Guomin Jiang <guomin.jiang@intel.com>
 
 DynamicTablesPkg
 F: DynamicTablesPkg/
@@ -197,6 +199,8 @@ F: FmpDevicePkg/
 W: https://github.com/tianocore/tianocore.github.io/wiki/FmpDevicePkg
 M: Liming Gao <liming.gao@intel.com>
 M: Michael D Kinney <michael.d.kinney@intel.com>
+R: Guomin Jiang <guomin.jiang@intel.com>
+R: Wei6 Xu <wei6.xu@intel.com>
 
 IntelFsp2Pkg
 F: IntelFsp2Pkg/
@@ -288,14 +292,12 @@ R: Liming Gao <liming.gao@intel.com>
 
 MdeModulePkg: Device and Peripheral modules
 F: MdeModulePkg/*PciHostBridge*/
-F: MdeModulePkg/*Serial*/
 F: MdeModulePkg/Bus/
 F: MdeModulePkg/Include/*Ata*.h
 F: MdeModulePkg/Include/*IoMmu*.h
 F: MdeModulePkg/Include/*NonDiscoverableDevice*.h
 F: MdeModulePkg/Include/*NvmExpress*.h
 F: MdeModulePkg/Include/*SdMmc*.h
-F: MdeModulePkg/Include/*SerialPort*.h
 F: MdeModulePkg/Include/*Ufs*.h
 F: MdeModulePkg/Include/*Usb*.h
 F: MdeModulePkg/Include/Guid/RecoveryDevice.h
@@ -304,10 +306,15 @@ F: MdeModulePkg/Include/Library/PciHostBridgeLib.h
 F: MdeModulePkg/Include/Ppi/StorageSecurityCommand.h
 F: MdeModulePkg/Include/Protocol/Ps2Policy.h
 F: MdeModulePkg/Library/NonDiscoverableDeviceRegistrationLib/
-F: MdeModulePkg/Universal/Disk/
 F: MdeModulePkg/Universal/PcatSingleSegmentPciCfg2Pei/
 R: Hao A Wu <hao.a.wu@intel.com>
 R: Ray Ni <ray.ni@intel.com>
+
+MdeModulePkg: Disk modules
+F: MdeModulePkg/Universal/Disk/
+R: Hao A Wu <hao.a.wu@intel.com>
+R: Ray Ni <ray.ni@intel.com>
+R: Zhichao Gao <zhichao.gao@intel.com>
 
 MdeModulePkg: Firmware Update modules
 F: MdeModulePkg/*Capsule*/
@@ -321,6 +328,7 @@ F: MdeModulePkg/Library/FmpAuthenticationLibNull/
 F: MdeModulePkg/Universal/Esrt*/
 R: Hao A Wu <hao.a.wu@intel.com>
 R: Liming Gao <liming.gao@intel.com>
+R: Guomin Jiang <guomin.jiang@intel.com>
 
 MdeModulePkg: HII and UI modules
 F: MdeModulePkg/*FileExplorer*/
@@ -361,10 +369,18 @@ F: MdeModulePkg/Include/*Reset*.h
 R: Zhichao Gao <zhichao.gao@intel.com>
 R: Ray Ni <ray.ni@intel.com>
 
+MdeModulePkg: Serial modules
+F: MdeModulePkg/*Serial*/
+F: MdeModulePkg/Include/*SerialPort*.h
+R: Hao A Wu <hao.a.wu@intel.com>
+R: Ray Ni <ray.ni@intel.com>
+R: Zhichao Gao <zhichao.gao@intel.com>
+
 MdeModulePkg: SMBIOS modules
 F: MdeModulePkg/Universal/Smbios*/
 R: Dandan Bi <dandan.bi@intel.com>
 R: Star Zeng <star.zeng@intel.com>
+R: Zhichao Gao <zhichao.gao@intel.com>
 
 MdeModulePkg: UEFI Variable modules
 F: MdeModulePkg/*Var*/
@@ -398,6 +414,19 @@ M: Laszlo Ersek <lersek@redhat.com>
 M: Ard Biesheuvel <ard.biesheuvel@arm.com>
 S: Maintained
 
+OvmfPkg: bhyve-related modules
+F: OvmfPkg/Bhyve/
+F: OvmfPkg/Include/IndustryStandard/Bhyve.h
+F: OvmfPkg/Include/Library/BhyveFwCtlLib.h
+F: OvmfPkg/Library/AcpiTimerLib/BaseAcpiTimerLibBhyve.c
+F: OvmfPkg/Library/AcpiTimerLib/BaseAcpiTimerLibBhyve.inf
+F: OvmfPkg/Library/BhyveFwCtlLib/
+F: OvmfPkg/Library/PlatformBootManagerLibBhyve/
+F: OvmfPkg/Library/ResetSystemLib/BaseResetShutdownBhyve.c
+F: OvmfPkg/Library/ResetSystemLib/BaseResetSystemLibBhyve.inf
+R: Rebecca Cran <rebecca@bsdio.com>
+R: Peter Grehan <grehan@freebsd.org>
+
 OvmfPkg: CSM modules
 F: OvmfPkg/Csm/
 R: David Woodhouse <dwmw2@infradead.org>
@@ -411,6 +440,16 @@ F: OvmfPkg/MptScsiDxe/
 F: OvmfPkg/PvScsiDxe/
 R: Liran Alon <liran.alon@oracle.com>
 R: Nikita Leshenko <nikita.leshchenko@oracle.com>
+
+OvmfPkg: SEV-related modules
+F: OvmfPkg/AmdSevDxe/
+F: OvmfPkg/Include/Library/MemEncryptSevLib.h
+F: OvmfPkg/IoMmuDxe/AmdSevIoMmu.*
+F: OvmfPkg/Library/BaseMemEncryptSevLib/
+F: OvmfPkg/Library/VmgExitLib/
+F: OvmfPkg/PlatformPei/AmdSev.c
+R: Tom Lendacky <thomas.lendacky@amd.com>
+R: Brijesh Singh <brijesh.singh@amd.com>
 
 OvmfPkg: TCG- and TPM2-related modules
 F: OvmfPkg/Include/IndustryStandard/QemuTpm.h

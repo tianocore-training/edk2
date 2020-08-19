@@ -229,6 +229,7 @@
 
 [LibraryClasses.common]
   BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf
+  VmgExitLib|UefiCpuPkg/Library/VmgExitLibNull/VmgExitLibNull.inf
 
 [LibraryClasses.common.SEC]
   TimerLib|OvmfPkg/Library/AcpiTimerLib/BaseRomAcpiTimerLib.inf
@@ -605,6 +606,11 @@
 
   # Set memory encryption mask
   gEfiMdeModulePkgTokenSpaceGuid.PcdPteMemoryEncryptionAddressOrMask|0x0
+
+  # Set SEV-ES defaults
+  gEfiMdeModulePkgTokenSpaceGuid.PcdGhcbBase|0
+  gEfiMdeModulePkgTokenSpaceGuid.PcdGhcbSize|0
+  gUefiCpuPkgTokenSpaceGuid.PcdSevEsIsEnabled|0
 
 !if $(SMM_REQUIRE) == TRUE
   gUefiOvmfPkgTokenSpaceGuid.PcdQ35TsegMbytes|8
