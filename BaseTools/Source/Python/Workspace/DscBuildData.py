@@ -2584,7 +2584,7 @@ class DscBuildData(PlatformBuildClassObject):
         CApp = CApp + '\n'
         for Pcd in StructuredPcds.values():
             CApp = CApp + self.GenerateArrayAssignment(Pcd)
-        for PcdName in StructuredPcds:
+        for PcdName in sorted(StructuredPcds.keys()):
             Pcd = StructuredPcds[PcdName]
             CApp = CApp + self.GenerateSizeFunction(Pcd)
             CApp = CApp + self.GenerateDefaultValueAssignFunction(Pcd)
@@ -2639,7 +2639,7 @@ class DscBuildData(PlatformBuildClassObject):
         else:
             MakeApp = MakeApp + PcdGccMakefile
             MakeApp = MakeApp + 'APPFILE = %s/%s\n' % (self.OutputPath, PcdValueInitName) + 'APPNAME = %s\n' % (PcdValueInitName) + 'OBJECTS = %s/%s.o %s.o\n' % (self.OutputPath, PcdValueInitName, os.path.join(self.OutputPath, PcdValueCommonName)) + \
-                      'include $(MAKEROOT)/Makefiles/app.makefile\n' + 'INCLUDE +='
+                      'include $(MAKEROOT)/Makefiles/app.makefile\n' + 'TOOL_INCLUDE +='
 
         IncSearchList = []
         PlatformInc = OrderedDict()

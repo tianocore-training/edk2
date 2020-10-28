@@ -1718,7 +1718,9 @@ typedef enum {
   MemoryTypeLpddr4                         = 0x1E,
   MemoryTypeLogicalNonVolatileDevice       = 0x1F,
   MemoryTypeHBM                            = 0x20,
-  MemoryTypeHBM2                           = 0x21
+  MemoryTypeHBM2                           = 0x21,
+  MemoryTypeDdr5                           = 0x22,
+  MemoryTypeLpddr5                         = 0x23
 } MEMORY_DEVICE_TYPE;
 
 ///
@@ -2502,6 +2504,15 @@ typedef struct {
   UINT8                             BusNum;
   UINT8                             DevFuncNum;
 } SMBIOS_TABLE_TYPE41;
+
+///
+///  Management Controller Host Interface - Protocol Record Data Format.
+///
+typedef struct {
+  UINT8                        ProtocolType;
+  UINT8                        ProtocolTypeDataLen;
+  UINT8                        ProtocolTypeData[1];
+} MC_HOST_INTERFACE_PROTOCOL_RECORD;
 
 ///
 /// Management Controller Host Interface - Interface Types.
