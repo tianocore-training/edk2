@@ -1,0 +1,173 @@
+diff --git a/EmulatorPkg/EmulatorPkg.dsc b/EmulatorPkg/EmulatorPkg.dsc
+index 4cf886b9ea..c3a84da4f5 100644
+--- a/EmulatorPkg/EmulatorPkg.dsc
++++ b/EmulatorPkg/EmulatorPkg.dsc
+@@ -17,13 +17,18 @@
+   PLATFORM_GUID                  = 05FD064D-1073-E844-936C-A0E16317107D
+   PLATFORM_VERSION               = 0.3
+   DSC_SPECIFICATION              = 0x00010005
+-  OUTPUT_DIRECTORY               = Build/Emulator$(ARCH)
++  OUTPUT_DIRECTORY               = $(WORKSPACE)/Build/Emulator$(ARCH)
+ 
+   SUPPORTED_ARCHITECTURES        = X64|IA32
+   BUILD_TARGETS                  = DEBUG|RELEASE|NOOPT
+   SKUID_IDENTIFIER               = DEFAULT
+   FLASH_DEFINITION               = EmulatorPkg/EmulatorPkg.fdf
+ 
++# For UEFI / EDK II Training
++# This flag is to enable a different ver string for building of the ShellPkg
++# These can be changed on the command line.
++#
++  DEFINE  ADD_SHELL_STRING         = FALSE
+ 
+   #
+   # Network definition
+@@ -116,6 +121,10 @@
+   DebugAgentLib|MdeModulePkg/Library/DebugAgentLibNull/DebugAgentLibNull.inf
+   PeiServicesTablePointerLib|EmulatorPkg/Library/PeiServicesTablePointerLibMagicPage/PeiServicesTablePointerLibMagicPage.inf
+   DebugLib|MdeModulePkg/Library/PeiDxeDebugLibReportStatusCode/PeiDxeDebugLibReportStatusCode.inf
++
++  # Example for UEFI / EDK II Training
++  #DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
++
+   LockBoxLib|MdeModulePkg/Library/LockBoxNullLib/LockBoxNullLib.inf
+   CpuExceptionHandlerLib|MdeModulePkg/Library/CpuExceptionHandlerLibNull/CpuExceptionHandlerLibNull.inf
+   TpmMeasurementLib|MdeModulePkg/Library/TpmMeasurementLibNull/TpmMeasurementLibNull.inf
+@@ -215,6 +224,11 @@
+   gEfiMdeModulePkgTokenSpaceGuid.PcdDxeIplBuildPageTables|FALSE
+ 
+ [PcdsFixedAtBuild]
++# UEFI / EDK II Training
++# gEfiMdeModulePkgTokenSpaceGuid.PcdHelloWorldPrintTimes|3
++#   Here is where you would put the HelloWorldPrintString PCD
++# HINT: look at MdeModulePkg.dec for HelloWorldPrintString
++
+   gEfiMdeModulePkgTokenSpaceGuid.PcdImageProtectionPolicy|0x00000000
+   gEfiMdeModulePkgTokenSpaceGuid.PcdResetOnMemoryTypeInformationChange|FALSE
+   gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x80000040
+@@ -255,7 +269,7 @@
+ 
+   # For a CD-ROM/DVD use L"diag.dmg:RO:2048"
+   gEmulatorPkgTokenSpaceGuid.PcdEmuVirtualDisk|L"disk.dmg:FW"
+-  gEmulatorPkgTokenSpaceGuid.PcdEmuGop|L"GOP Window"
++  gEmulatorPkgTokenSpaceGuid.PcdEmuGop|L"GOP Window 1!GOP Window 2"
+   gEmulatorPkgTokenSpaceGuid.PcdEmuFileSystem|L"."
+   gEmulatorPkgTokenSpaceGuid.PcdEmuSerialPort|L"/dev/ttyS0"
+   gEmulatorPkgTokenSpaceGuid.PcdEmuNetworkInterface|L"en0"
+@@ -448,16 +462,26 @@
+       gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
+   }
+ !endif
++
++# For UEFI / EDK II Training
+   ShellPkg/Application/Shell/Shell.inf {
+     <LibraryClasses>
+       ShellCommandLib|ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf
+       NULL|ShellPkg/Library/UefiShellLevel2CommandsLib/UefiShellLevel2CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellLevel1CommandsLib/UefiShellLevel1CommandsLib.inf
++!if $(ADD_SHELL_STRING) == TRUE
++	# Training Lib for build switch lab
++      NULL|ShellPkg/Library/UefiShellLevel3CommandsLib_Training_Lib/UefiShellLevel3Commands_Training_Lib.inf
++!else
++	# normal Lib for build switch
+       NULL|ShellPkg/Library/UefiShellLevel3CommandsLib/UefiShellLevel3CommandsLib.inf
++!endif
+       NULL|ShellPkg/Library/UefiShellDriver1CommandsLib/UefiShellDriver1CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellDebug1CommandsLib/UefiShellDebug1CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellInstall1CommandsLib/UefiShellInstall1CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellNetwork1CommandsLib/UefiShellNetwork1CommandsLib.inf
++      NULL|ShellPkg/Library/UefiShellNetwork2CommandsLib/UefiShellNetwork2CommandsLib.inf
++      NULL|ShellPkg/Library/UefiShellAcpiViewCommandLib/UefiShellAcpiViewCommandLib.inf
+       HandleParsingLib|ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
+       OrderedCollectionLib|MdePkg/Library/BaseOrderedCollectionRedBlackTreeLib/BaseOrderedCollectionRedBlackTreeLib.inf
+       SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
+@@ -482,6 +506,11 @@
+ !endif
+ !include RedfishPkg/Redfish.dsc.inc
+ 
++
++# UEFI / EDK II Training Class
++
++# Add new modules here
++
+ [BuildOptions]
+   #
+   # Disable deprecated APIs.
+diff --git a/MdeModulePkg/Logo/Logo.bmp b/MdeModulePkg/Logo/Logo.bmp
+index 3e85229e17..0df3b13d29 100644
+Binary files a/MdeModulePkg/Logo/Logo.bmp and b/MdeModulePkg/Logo/Logo.bmp differ
+diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
+index 1448f925b7..a2657b3c39 100644
+--- a/OvmfPkg/OvmfPkgX64.dsc
++++ b/OvmfPkg/OvmfPkgX64.dsc
+@@ -25,6 +25,12 @@
+   SKUID_IDENTIFIER               = DEFAULT
+   FLASH_DEFINITION               = OvmfPkg/OvmfPkgX64.fdf
+ 
++# For UEFI / EDK II Training
++# This flag is to enable a different ver string for building of the ShellPkg
++# These can be changed on the command line.
++#
++  DEFINE  ADD_SHELL_STRING         = FALSE
++  
+   #
+   # Defines for default states.  These can be changed on the command line.
+   # -D FLAG=VALUE
+@@ -495,6 +501,11 @@
+ !endif
+ 
+ [PcdsFixedAtBuild]
++# UEFI / EDK II Training
++#gEfiMdeModulePkgTokenSpaceGuid.PcdHelloWorldPrintTimes|3
++#   Here is where you would put the HelloWorldPrintString PCD
++# HINT: look at MdeModulePkg.dec for HelloWorldPrintString
++
+   gEfiMdeModulePkgTokenSpaceGuid.PcdStatusCodeMemorySize|1
+ !if $(SMM_REQUIRE) == FALSE
+   gEfiMdeModulePkgTokenSpaceGuid.PcdResetOnMemoryTypeInformationChange|FALSE
+@@ -994,7 +1005,13 @@
+       ShellCommandLib|ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf
+       NULL|ShellPkg/Library/UefiShellLevel2CommandsLib/UefiShellLevel2CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellLevel1CommandsLib/UefiShellLevel1CommandsLib.inf
++!if $(ADD_SHELL_STRING) == TRUE
++	# Training Lib for build switch lab
++      NULL|ShellPkg/Library/UefiShellLevel3CommandsLib_Training_Lib/UefiShellLevel3Commands_Training_Lib.inf
++!else
++	# normal Lib for build switch
+       NULL|ShellPkg/Library/UefiShellLevel3CommandsLib/UefiShellLevel3CommandsLib.inf
++!endif
+       NULL|ShellPkg/Library/UefiShellDriver1CommandsLib/UefiShellDriver1CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellDebug1CommandsLib/UefiShellDebug1CommandsLib.inf
+       NULL|ShellPkg/Library/UefiShellInstall1CommandsLib/UefiShellInstall1CommandsLib.inf
+@@ -1002,6 +1019,7 @@
+ !if $(NETWORK_IP6_ENABLE) == TRUE
+       NULL|ShellPkg/Library/UefiShellNetwork2CommandsLib/UefiShellNetwork2CommandsLib.inf
+ !endif
++      NULL|ShellPkg/Library/UefiShellAcpiViewCommandLib/UefiShellAcpiViewCommandLib.inf
+       HandleParsingLib|ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
+       PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
+       BcfgCommandLib|ShellPkg/Library/UefiShellBcfgCommandLib/UefiShellBcfgCommandLib.inf
+@@ -1092,3 +1110,9 @@
+   # TPM support
+   #
+ !include OvmfPkg/OvmfTpmComponentsDxe.dsc.inc
++
++
++# UEFI / EDK II Training Class
++
++# Add new modules here
++# MdeModulePkg/Application/HelloWorld/HelloWorld.inf
+\ No newline at end of file
+diff --git a/ShellPkg/Library/UefiShellLib/UefiShellLib.c b/ShellPkg/Library/UefiShellLib/UefiShellLib.c
+index a72767bd86..b2875762e3 100644
+--- a/ShellPkg/Library/UefiShellLib/UefiShellLib.c
++++ b/ShellPkg/Library/UefiShellLib/UefiShellLib.c
+@@ -3034,7 +3034,7 @@ InternalShellPrintWorker (
+             gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_WHITE, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
+             break;
+           case (L'B'):
+-            gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_LIGHTBLUE, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
++            gST->ConOut->SetAttribute(gST->ConOut, EFI_TEXT_ATTR(EFI_CYAN, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
+             break;
+           case (L'V'):
+             gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_LIGHTGREEN, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
