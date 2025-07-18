@@ -17,13 +17,18 @@
   PLATFORM_GUID                  = 05FD064D-1073-E844-936C-A0E16317107D
   PLATFORM_VERSION               = 0.3
   DSC_SPECIFICATION              = 0x00010005
-  OUTPUT_DIRECTORY               = Build/Emulator$(ARCH)
+  OUTPUT_DIRECTORY               = $(WORKSPACE)/Build/Emulator$(ARCH)
 
   SUPPORTED_ARCHITECTURES        = X64|IA32
   BUILD_TARGETS                  = DEBUG|RELEASE|NOOPT
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = EmulatorPkg/EmulatorPkg.fdf
 
+# For UEFI / EDK II Training
+# This flag is to enable a different ver string for building of the ShellPkg
+# These can be changed on the command line.
+#
+  DEFINE  ADD_SHELL_STRING         = FALSE
 
   #
   # Network definition
@@ -116,6 +121,10 @@
   DebugAgentLib|MdeModulePkg/Library/DebugAgentLibNull/DebugAgentLibNull.inf
   PeiServicesTablePointerLib|EmulatorPkg/Library/PeiServicesTablePointerLibMagicPage/PeiServicesTablePointerLibMagicPage.inf
   DebugLib|MdeModulePkg/Library/PeiDxeDebugLibReportStatusCode/PeiDxeDebugLibReportStatusCode.inf
+
+  # Example for UEFI / EDK II Training
+  #DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
+
   LockBoxLib|MdeModulePkg/Library/LockBoxNullLib/LockBoxNullLib.inf
   CpuExceptionHandlerLib|MdeModulePkg/Library/CpuExceptionHandlerLibNull/CpuExceptionHandlerLibNull.inf
   TpmMeasurementLib|MdeModulePkg/Library/TpmMeasurementLibNull/TpmMeasurementLibNull.inf
@@ -218,6 +227,11 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdDxeIplBuildPageTables|FALSE
 
 [PcdsFixedAtBuild]
+# UEFI / EDK II Training
+# gEfiMdeModulePkgTokenSpaceGuid.PcdHelloWorldPrintTimes|3
+#   Here is where you would put the HelloWorldPrintString PCD
+# HINT: look at MdeModulePkg.dec for HelloWorldPrintString
+
   gEfiMdeModulePkgTokenSpaceGuid.PcdImageProtectionPolicy|0x00000000
   gEfiMdeModulePkgTokenSpaceGuid.PcdResetOnMemoryTypeInformationChange|FALSE
   gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x80000040
@@ -258,7 +272,7 @@
 
   # For a CD-ROM/DVD use L"diag.dmg:RO:2048"
   gEmulatorPkgTokenSpaceGuid.PcdEmuVirtualDisk|L"disk.dmg:FW"
-  gEmulatorPkgTokenSpaceGuid.PcdEmuGop|L"GOP Window"
+  gEmulatorPkgTokenSpaceGuid.PcdEmuGop|L"GOP Window 1!GOP Window 2"
   gEmulatorPkgTokenSpaceGuid.PcdEmuFileSystem|L"."
   gEmulatorPkgTokenSpaceGuid.PcdEmuSerialPort|L"/dev/ttyS0"
   gEmulatorPkgTokenSpaceGuid.PcdEmuNetworkInterface|L"en0"
@@ -487,16 +501,26 @@
       gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
   }
 !endif
+
+# For UEFI / EDK II Training
   ShellPkg/Application/Shell/Shell.inf {
     <LibraryClasses>
       ShellCommandLib|ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf
       NULL|ShellPkg/Library/UefiShellLevel2CommandsLib/UefiShellLevel2CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellLevel1CommandsLib/UefiShellLevel1CommandsLib.inf
+!if $(ADD_SHELL_STRING) == TRUE
+	# Training Lib for build switch lab
+      NULL|ShellPkg/Library/UefiShellLevel3CommandsLib_Training_Lib/UefiShellLevel3Commands_Training_Lib.inf
+!else
+	# normal Lib for build switch
       NULL|ShellPkg/Library/UefiShellLevel3CommandsLib/UefiShellLevel3CommandsLib.inf
+!endif
       NULL|ShellPkg/Library/UefiShellDriver1CommandsLib/UefiShellDriver1CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellDebug1CommandsLib/UefiShellDebug1CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellInstall1CommandsLib/UefiShellInstall1CommandsLib.inf
       NULL|ShellPkg/Library/UefiShellNetwork1CommandsLib/UefiShellNetwork1CommandsLib.inf
+      NULL|ShellPkg/Library/UefiShellNetwork2CommandsLib/UefiShellNetwork2CommandsLib.inf
+      NULL|ShellPkg/Library/UefiShellAcpiViewCommandLib/UefiShellAcpiViewCommandLib.inf
       HandleParsingLib|ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
       OrderedCollectionLib|MdePkg/Library/BaseOrderedCollectionRedBlackTreeLib/BaseOrderedCollectionRedBlackTreeLib.inf
       SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
@@ -521,14 +545,20 @@
 !endif
 !include RedfishPkg/Redfish.dsc.inc
 
+
+# UEFI / EDK II Training Class
+
+# Add new modules here
+
 [BuildOptions]
   #
   # Disable deprecated APIs.
   #
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
 
-  MSFT:DEBUG_*_*_CC_FLAGS = /Od /Oy-
-  MSFT:NOOPT_*_*_CC_FLAGS = /Od /Oy-
+  MSFT:DEBUG_*_*_CC_FLAGS = /Od /Oy- /wd5287
+  MSFT:NOOPT_*_*_CC_FLAGS = /Od /Oy- /wd5287
+
   GCC:DEBUG_CLANGPDB_*_CC_FLAGS =-O0 -Wno-unused-command-line-argument -Wno-incompatible-pointer-types -Wno-enum-conversion -Wno-incompatible-pointer-types -Wno-sometimes-uninitialized -Wno-constant-conversion -Wno-main-return-type
 
   MSFT:*_*_*_DLINK_FLAGS     = /ALIGN:4096 /FILEALIGN:4096

@@ -3035,7 +3035,7 @@ InternalShellPrintWorker (
             gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_WHITE, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
             break;
           case (L'B'):
-            gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_LIGHTBLUE, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
+            gST->ConOut->SetAttribute(gST->ConOut, EFI_TEXT_ATTR(EFI_CYAN, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
             break;
           case (L'V'):
             gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_LIGHTGREEN, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));

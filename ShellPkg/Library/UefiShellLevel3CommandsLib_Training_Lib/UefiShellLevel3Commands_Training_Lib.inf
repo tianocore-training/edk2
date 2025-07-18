@@ -1,0 +1,69 @@
+##  @file
+# Provides shell level 3 functions
+# Note that the interactive versions of the time, date, and timezone functions are handled in the level 2 library.
+#
+# (C) Copyright 2013 Hewlett-Packard Development Company, L.P.<BR>
+# Copyright (c) 2009-2015, Intel Corporation. All rights reserved. <BR>
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010006
+  BASE_NAME                      = UefiShellLevel3CommandsLib
+  FILE_GUID                      = aedcc14b-0f7d-4f02-ab13-b1a3185d9d15
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = NULL|UEFI_APPLICATION UEFI_DRIVER
+  CONSTRUCTOR                    = ShellLevel3CommandsLibConstructor
+  DESTRUCTOR                     = ShellLevel3CommandsLibDestructor
+
+[Sources.common]
+# note that time, timezone, and date are part of the level 2 library
+  Type.c
+  Touch.c
+  Ver.c
+  UefiShellLevel3Commands_Training_Lib.uni
+  UefiShellLevel3CommandsLib.c
+  UefiShellLevel3CommandsLib.h
+  Cls.c
+  Alias.c
+  Echo.c
+  Pause.c
+  GetMtc.c
+  Help.c
+
+
+[Packages]
+  MdePkg/MdePkg.dec
+  ShellPkg/ShellPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  MemoryAllocationLib
+  BaseLib
+  BaseMemoryLib
+  DebugLib
+  ShellCommandLib
+  ShellLib
+  UefiLib
+  UefiRuntimeServicesTableLib
+  UefiBootServicesTableLib
+  PcdLib
+  HiiLib
+  FileHandleLib
+  HandleParsingLib
+
+[Guids]
+  gEfiFileInfoGuid                                        ## UNDEFINED
+  gShellLevel3HiiGuid                                     ## SOMETIMES_CONSUMES ## HII
+
+[Pcd.common]
+  gEfiShellPkgTokenSpaceGuid.PcdShellSupportLevel         ## CONSUMES
+  gEfiShellPkgTokenSpaceGuid.PcdShellFileOperationSize    ## SOMETIMES_CONSUMES
+  gEfiShellPkgTokenSpaceGuid.PcdShellSupplier             ## SOMETIMES_CONSUMES
+
+[Protocols]
+  gEfiShellDynamicCommandProtocolGuid                     ## SOMETIMES_CONSUMES
